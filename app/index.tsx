@@ -1,16 +1,49 @@
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+function HomeScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to FitQuest!</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Onboarding")}
+      >
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>
       <StatusBar style="auto" />
     </View>
+  );
+}
+
+function OnboardingScreen() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>This is the Onboarding Screen!</Text>
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+export default function App() {
+  return (
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: "Welcome" }}
+      />
+      <Stack.Screen
+        name="Onboarding"
+        component={OnboardingScreen}
+        options={{ title: "Onboarding" }}
+      />
+    </Stack.Navigator>
   );
 }
 
