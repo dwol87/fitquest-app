@@ -52,7 +52,7 @@ export default function OnboardingScreen({ navigation }: any) {
       } else {
         // FINAL FADE OUT BEFORE NAVIGATING
         setTimeout(() => {
-          navigation.replace("Home");
+          navigation.replace("ProfileSetup");
         }, 300); // Give it a small delay after fade out
       }
     });
