@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Image } from "react-native";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Animated } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -6,19 +7,27 @@ import { StatusBar } from "expo-status-bar";
 const onboardingData = [
   {
     title: "Welcome to FitQuest!",
-    description: "Your fitness journey becomes a fun adventure!",
+    description: "Where your fitness journey becomes a fun adventure!",
+    image: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1",
+    backgroundColor: "#A8DADC", // Light Blue
   },
   {
     title: "Earn XP & Level Up",
     description: "Complete workouts and healthy habits to gain points!",
+    image: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1",
+    backgroundColor: "#8ECAE6", // Light Teal
   },
   {
     title: "Track Your Progress",
     description: "Stay consistent and visualize your success!",
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b",
+    backgroundColor: "#FFB4A2", // Light Coral
   },
   {
     title: "Ready to Begin?",
     description: "Let’s get started and crush your goals!",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c",
+    backgroundColor: "#FFE66D", // Light Yellow
   },
 ];
 
@@ -34,23 +43,35 @@ export default function OnboardingScreen({ navigation }: any) {
     }).start(() => {
       if (currentPage < onboardingData.length - 1) {
         setCurrentPage(currentPage + 1);
-      } else {
-        navigation.replace("Home");
-        return;
-      }
 
-      // ✨ Instead of instantly jumping back to opacity 1,
-      // ✨ Animate fade back in slowly
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+      } else {
+        // FINAL FADE OUT BEFORE NAVIGATING
+        setTimeout(() => {
+          navigation.replace("Home");
+        }, 300); // Give it a small delay after fade out
+      }
     });
   };
 
   return (
-    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          backgroundColor: onboardingData[currentPage].backgroundColor,
+          opacity: fadeAnim,
+        },
+      ]}
+    >
+      <Image
+        source={{ uri: onboardingData[currentPage].image }}
+        style={styles.image}
+      />
       <Text style={styles.title}>{onboardingData[currentPage].title}</Text>
       <Text style={styles.description}>
         {onboardingData[currentPage].description}
@@ -96,6 +117,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 40,
     paddingHorizontal: 20,
+  },
+  image: {
+    width: 250,
+    height: 250,
+    marginBottom: 30,
+    borderRadius: 20,
   },
   button: {
     backgroundColor: "#4CAF50",
