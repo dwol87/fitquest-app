@@ -1,3 +1,4 @@
+import OnboardingScreen from "./onboarding";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
@@ -16,15 +17,6 @@ function HomeScreen({ navigation }: any) {
       >
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-function OnboardingScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>This is the Onboarding Screen!</Text>
       <StatusBar style="auto" />
     </View>
   );
