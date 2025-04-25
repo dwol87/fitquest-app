@@ -5,23 +5,58 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 export default function ProfileSetupScreen({ navigation }: any) {
   const [username, setUsername] = useState("");
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
+
+  const avatars = [
+    "https://api.dicebear.com/7.x/adventurer/png?seed=FitQuest1",
+    "https://api.dicebear.com/7.x/adventurer/png?seed=FitQuest2",
+    "https://api.dicebear.com/7.x/adventurer/png?seed=FitQuest3",
+  ];
+
+  const fitnessGoals = ["Lose Weight", "Build Muscle", "Stay Healthy"];
 
   const handleContinue = () => {
-    if (username.trim() !== "") {
-      navigation.replace("Home"); // later we'll pass profile info
-    } else {
+    if (username.trim() === "") {
       alert("Please enter a username.");
+      return;
     }
+    if (!selectedAvatar) {
+      alert("Please select an avatar.");
+      return;
+    }
+    if (!selectedGoal) {
+      alert("Please select a fitness goal.");
+      return;
+    }
+    navigation.replace("Home");
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create Your Profile</Text>
+      <View style={styles.avatarContainer}>
+        {avatars.map((avatarUrl, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => setSelectedAvatar(avatarUrl)}
+          >
+            <Image
+              source={{ uri: avatarUrl }}
+              style={[
+                styles.avatar,
+                selectedAvatar === avatarUrl && styles.selectedAvatar,
+              ]}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
 
       <TextInput
         placeholder="Enter your username"
@@ -29,6 +64,28 @@ export default function ProfileSetupScreen({ navigation }: any) {
         onChangeText={setUsername}
         style={styles.input}
       />
+
+      <View style={styles.goalContainer}>
+        {fitnessGoals.map((goal, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => setSelectedGoal(goal)}
+            style={[
+              styles.goalButton,
+              selectedGoal === goal && styles.selectedGoalButton,
+            ]}
+          >
+            <Text
+              style={[
+                styles.goalButtonText,
+                selectedGoal === goal && styles.selectedGoalButtonText,
+              ]}
+            >
+              {goal}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
       <TouchableOpacity style={styles.button} onPress={handleContinue}>
         <Text style={styles.buttonText}>Continue</Text>
@@ -72,5 +129,45 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 18,
+  },
+  avatarContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginHorizontal: 10,
+    borderWidth: 2,
+    borderColor: "transparent",
+  },
+  selectedAvatar: {
+    borderColor: "#4CAF50",
+    borderWidth: 3,
+  },
+  goalContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  goalButton: {
+    backgroundColor: "#eee",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginVertical: 5,
+  },
+  selectedGoalButton: {
+    backgroundColor: "#4CAF50",
+  },
+  goalButtonText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  selectedGoalButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
