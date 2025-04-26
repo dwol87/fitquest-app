@@ -1,23 +1,52 @@
-import OnboardingScreen from "./onboarding";
-import ProfileSetupScreen from "./ProfileSetup";
+import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import OnboardingScreen from "./onboarding";
+import ProfileSetupScreen from "./ProfileSetup";
 
 const Stack = createNativeStackNavigator();
 
 function HomeScreen({ navigation }: any) {
+  const [userProfile, setUserProfile] = useState<any>(null);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const storedProfile = await AsyncStorage.getItem("userProfile");
+        if (storedProfile) {
+          setUserProfile(JSON.parse(storedProfile));
+        }
+      } catch (error) {
+        console.error("Error loading profile:", error);
+      }
+    };
+
+    loadProfile();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to FitQuest!</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Onboarding")}
-      >
-        <Text style={styles.buttonText}>Get Started</Text>
-      </TouchableOpacity>
+      {userProfile ? (
+        <>
+          <Text style={styles.title}>Welcome, {userProfile.username}!</Text>
+          <Image
+            source={{ uri: userProfile.avatar }}
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              marginBottom: 20,
+            }}
+          />
+          <Text style={styles.description}>Your Goal: {userProfile.goal}</Text>
+        </>
+      ) : (
+        <Text style={styles.title}>Loading your profile...</Text>
+      )}
       <StatusBar style="auto" />
     </View>
   );
@@ -57,6 +86,13 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 40,
+    textAlign: "center",
+  },
+  description: {
+    fontSize: 18,
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 20,
   },
   button: {
     backgroundColor: "#4CAF50",

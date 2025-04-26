@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   Text,
@@ -22,7 +23,7 @@ export default function ProfileSetupScreen({ navigation }: any) {
 
   const fitnessGoals = ["Lose Weight", "Build Muscle", "Stay Healthy"];
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (username.trim() === "") {
       alert("Please enter a username.");
       return;
@@ -35,7 +36,21 @@ export default function ProfileSetupScreen({ navigation }: any) {
       alert("Please select a fitness goal.");
       return;
     }
-    navigation.replace("Home");
+
+    // Save the user profile
+    const userProfile = {
+      username,
+      avatar: selectedAvatar,
+      goal: selectedGoal,
+    };
+
+    try {
+      await AsyncStorage.setItem("userProfile", JSON.stringify(userProfile));
+      navigation.replace("Home");
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      alert("Something went wrong saving your profile. Please try again.");
+    }
   };
 
   return (
