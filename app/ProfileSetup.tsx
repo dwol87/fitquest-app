@@ -42,6 +42,7 @@ export default function ProfileSetupScreen({ navigation }: any) {
       username,
       avatar: selectedAvatar,
       goal: selectedGoal,
+      xp: 0,
     };
 
     try {

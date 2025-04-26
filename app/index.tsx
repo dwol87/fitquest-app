@@ -13,6 +13,10 @@ const Stack = createNativeStackNavigator();
 function HomeScreen({ navigation }: any) {
   const [userProfile, setUserProfile] = useState<any>(null);
 
+  const getLevelFromXP = (xp: number) => {
+    return Math.floor(xp / 100) + 1; // Example: 0-99 XP = Level 1, 100-199 XP = Level 2, etc.
+  };
+
   useEffect(() => {
     const loadProfile = async () => {
       try {
@@ -43,6 +47,20 @@ function HomeScreen({ navigation }: any) {
             }}
           />
           <Text style={styles.description}>Your Goal: {userProfile.goal}</Text>
+          <Text style={styles.levelText}>
+            Level {getLevelFromXP(userProfile.xp)}
+          </Text>
+
+          <View style={styles.progressBarBackground}>
+            <View
+              style={[
+                styles.progressBarFill,
+                { width: `${userProfile.xp % 100}%` },
+              ]}
+            />
+          </View>
+
+          <Text style={styles.xpText}>{userProfile.xp} XP</Text>
         </>
       ) : (
         <Text style={styles.title}>Loading your profile...</Text>
@@ -103,5 +121,27 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 18,
+  },
+  levelText: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginTop: 20,
+  },
+  progressBarBackground: {
+    width: "80%",
+    height: 20,
+    backgroundColor: "#ddd",
+    borderRadius: 10,
+    overflow: "hidden",
+    marginTop: 10,
+  },
+  progressBarFill: {
+    height: "100%",
+    backgroundColor: "#4CAF50",
+  },
+  xpText: {
+    marginTop: 5,
+    fontSize: 16,
+    color: "#333",
   },
 });
