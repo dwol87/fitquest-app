@@ -32,6 +32,19 @@ function HomeScreen({ navigation }: any) {
     loadProfile();
   }, []);
 
+  const handleEditProfile = () => {
+    navigation.replace("ProfileSetup"); // Send user back to profile setup
+  };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem("userProfile"); // Delete saved profile
+      navigation.replace("Onboarding"); // Navigate to onboarding
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {userProfile ? (
@@ -66,6 +79,14 @@ function HomeScreen({ navigation }: any) {
         <Text style={styles.title}>Loading your profile...</Text>
       )}
       <StatusBar style="auto" />
+
+      <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
+        <Text style={styles.editButtonText}>Edit Profile</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutButtonText}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -143,5 +164,33 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 16,
     color: "#333",
+  },
+  logoutButton: {
+    marginTop: 10,
+    backgroundColor: "#FF5252",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
+  },
+  logoutButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  editButton: {
+    marginTop: 20,
+    backgroundColor: "#FFA726",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
+  },
+  editButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
